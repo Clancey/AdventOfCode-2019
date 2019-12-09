@@ -8,7 +8,9 @@ namespace AdventOfCode {
 		{
 			Console.WriteLine ("Hello World!");
 			var path = Directory.GetCurrentDirectory ();
-			var dayAnswer = new Day8 ().Solve ("Inputs/Day8.txt", 25, 6);
+			var day1 = new Day1 ().Solve ();
+			var day1Hard = new Day1 ().Solve2 ();
+			var dayAnswer = new Day8 ().Solve (25, 6);
 			Console.WriteLine ($"The answer is: {dayAnswer}");
 			Console.ReadKey ();
 		}

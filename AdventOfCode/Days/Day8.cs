@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 
 namespace AdventOfCode.Days {
-	public class Day8 {
+	public class Day8 : Day {
 
-		List<int> ParsePixels(string filePath)
+		List<int> ParsePixels()
 		{
-			var stringData = File.ReadAllText (filePath);
+			var stringData = this.ReadInputString ();
 			var pixels = stringData.Select (x=> int.Parse(x.ToString())).ToList ();
 			return pixels;
 		}
@@ -22,9 +22,9 @@ namespace AdventOfCode.Days {
 			//pixels.Take(pixels)
 		}
 
-		public int Solve (string filePath, int width, int height)
+		public int Solve (int width, int height)
 		{
-			var pixels = ParsePixels (filePath);
+			var pixels = ParsePixels ();
 			var layers = ParseLayers (pixels, width, height);
 			var answerLayer = layers.OrderBy (x => x.NumberOfZeros ()).First ();
 			return answerLayer.Value;
