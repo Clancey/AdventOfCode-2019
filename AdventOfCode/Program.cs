@@ -9,11 +9,12 @@ namespace AdventOfCode {
 		{
 
 			var puzzles = new List<Day> {
-				new Day1(),
-				new Day8(),
+				//new Day1(),
+				new Day2(),
+				//new Day8(),
 			};
 
-			foreach(var day in puzzles) {
+			foreach (var day in puzzles) {
 				day.Solve ();
 			}
 			Console.ReadKey ();
