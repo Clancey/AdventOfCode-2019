@@ -12,8 +12,7 @@ namespace AdventOfCode.Days {
 
 		public override void SolvePart1 ()
 		{
-			var wireInputs = this.ReadInputLines ();
-			var wires = wireInputs.Select (Wire.Parse).ToList ();
+			var wires = GetWires ();
 			var intersections = wires [0].IntersectionPoints (wires [1]);
 			var result = intersections.Min (x => Math.Abs (x.X) + Math.Abs (x.Y));
 			Console.WriteLine ($"Closest Point: {result}");
@@ -21,9 +20,19 @@ namespace AdventOfCode.Days {
 
 		public override void SolvePart2 ()
 		{
-			Console.WriteLine ("throw new NotImplementedException ");
+			var wires = GetWires ();
+			var intersections = wires [0].IntersectingLines (wires [1]);
+			var result = intersections.Min (x => x.line.Length(x.point) + x.line2.Length(x.point));
+			Console.WriteLine ($"Closest Length: {result}");
 		}
 
+		public List<Wire> GetWires()
+		{
+
+			var wireInputs = this.ReadInputLines ();
+			var wires = wireInputs.Select (Wire.Parse).ToList ();
+			return wires;
+		}
 
 		public class Wire {
 			Point current = new Point ();
@@ -32,8 +41,11 @@ namespace AdventOfCode.Days {
 			{
 				var instructions = input.Split (",");
 				var wire = new Wire ();
+				Line previousLine = null;
 				foreach (var i in instructions) {
 					var result = Line.Parse (i, wire.current);
+					result.line.Previous = previousLine;
+					previousLine = result.line;
 					wire.Lines.Add (result.line);
 					wire.current = result.nextPoint;
 				}
@@ -45,29 +57,35 @@ namespace AdventOfCode.Days {
 				var intersections = Lines.SelectMany (x => wire.Lines.Select (y => y.Intercects (x)).Where (x => x.intersects)).Select (x => x.point).Distinct ().ToList ();
 				return intersections;
 			}
-		}
-
-		public enum Orientation {
-			Horizontal,
-			Vertical
+			public List<(Line line, Line line2, Point point)> IntersectingLines (Wire wire)
+			{
+				var intersections = Lines.SelectMany (x => wire.Lines.Select (y => y.Intercects (x))).Where (x => x.intersects)
+					.Select (x => (x.line,x.line2, x.point)).ToList();
+				return intersections;
+			}
 		}
 		public class Line {
 			public Point Start { get; set; }
 			public Point End { get; set; }
-
-			public int MinX () => Math.Min (Start.X, End.X);
-			public int MaxX () => Math.Max (Start.X, End.X);
-			public int MinY () => Math.Min (Start.Y, End.Y);
-			public int MaxY () => Math.Max (Start.Y, End.Y);
+			public Line Previous { get; set; }
 
 
-			public (bool intersects, Point point) Intercects (Line line)
+			public int Length (Point? interSectionPoint = null)
+			{
+				var end = interSectionPoint ?? End;
+				var length = Math.Abs (Start.X - end.X) + Math.Abs (Start.Y - end.Y);
+				var previousLength = (this.Previous?.Length() ?? 0);
+				return length + previousLength;
+			}
+
+
+			public (bool intersects, Point point, Line line, Line line2) Intercects (Line line)
 			{
 				var y = YIntercepts (line);
 				var x = XIntercepts (line);
 				if (!y.between || !x.between || (x.value == 0 && y.value == 0))
-					return (false, Point.Empty);
-				return (true, new Point (x.value, y.value));
+					return (false, Point.Empty, line, this);
+				return (true, new Point (x.value, y.value), line,this);
 
 			}
 
@@ -106,10 +124,9 @@ namespace AdventOfCode.Days {
 
 				var nextPoint = new Point (lastPoint.X + offsetPoint.X, lastPoint.Y + offsetPoint.Y);
 
-				var points = new [] { lastPoint, nextPoint }.OrderBy (x => x.X).ThenBy (x => x.Y).ToList ();
 				var line = new Line {
-					Start = points [0],
-					End = points [1]
+					Start = lastPoint,
+					End = nextPoint
 				};
 				return (line, nextPoint);
 			}
