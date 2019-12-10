@@ -10,7 +10,8 @@ namespace AdventOfCode {
 
 			var puzzles = new List<Day> {
 				//new Day1(),
-				new Day2(),
+				//new Day2(),
+				new Day3(),
 				//new Day8(),
 			};
 
