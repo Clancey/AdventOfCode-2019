@@ -67,7 +67,7 @@ namespace AdventOfCode.Days {
 			}
 			var meLenthg = GetOrbitLength ("YOU", lastHop);
 			var santaLength = GetOrbitLength ("SAN", lastHop);
-			var answer = meLenthg + santaLength - 1;
+			var answer = meLenthg + santaLength - 2;
 			Console.WriteLine ($"Answer: {answer}");
 			//throw new NotImplementedException ();
 		}
