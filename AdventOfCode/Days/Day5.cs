@@ -41,7 +41,35 @@ namespace AdventOfCode.Days {
 					var value= ReadParameter (position, 0, propCodes);
 					Console.WriteLine($"Output:{value}");
 
-				} else if (opCode == 1 || opCode == 2) {
+				}
+				else if(opCode == 5) {
+					var p1 = ReadParameter(ReadCode (),0,propCodes);
+					var p2 = ReadParameter (ReadCode (), 1, propCodes);
+					if (p1 != 0) {
+						currentIndex = p2;
+					}
+
+				}
+				else if(opCode == 6) {
+					var p1 = ReadParameter (ReadCode (), 0, propCodes);
+					var p2 = ReadParameter (ReadCode (), 1, propCodes);
+					if (p1 == 0) {
+						currentIndex = p2;
+					}
+				}
+				else if(opCode == 7) {
+					var p1 = ReadParameter (ReadCode (), 0, propCodes);
+					var p2 = ReadParameter (ReadCode (), 1, propCodes);
+					var p3 = ReadCode ();
+					input [p3] = p1 < p2 ? 1 : 0;
+				}
+				else if(opCode == 8) {
+					var p1 = ReadParameter (ReadCode (), 0, propCodes);
+					var p2 = ReadParameter (ReadCode (), 1, propCodes);
+					var p3 = ReadCode ();
+					input [p3] = p1 == p2 ? 1 : 0;
+				}
+				else if (opCode == 1 || opCode == 2) {
 					var xIndex = ReadCode ();
 					var yIndex = ReadCode ();
 					var outputIndex = ReadCode ();
@@ -94,7 +122,7 @@ namespace AdventOfCode.Days {
 
 		public override void SolvePart2 ()
 		{
-			
+			var answer = RunProgram (5);
 		}
 	}
 }
